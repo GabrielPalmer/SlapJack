@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SlapJack" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHJ-vV-CL5" customClass="ButtonDesign" customModule="SlapJack" customModuleProvider="target">
+                                <rect key="frame" x="60" y="557.5" width="255" height="79.5"/>
+                                <color key="backgroundColor" red="0.1599148495605443" green="0.13213001468858596" blue="0.20717005076142136" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="255" id="kRT-jI-IF5"/>
+                                </constraints>
+                                <color key="tintColor" red="1" green="0.040711341620000001" blue="0.1260834495" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal">
+                                    <attributedString key="attributedTitle">
+                                        <fragment content="Slap Jack!">
+                                            <attributes>
+                                                <font key="NSFont" size="52" name="Futura-Medium"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8TY-wG-r26" customClass="ViewDesign" customModule="SlapJack" customModuleProvider="target">
+                                <rect key="frame" x="16" y="36" width="108.5" height="56"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cards" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLZ-mi-FWw">
+                                        <rect key="frame" x="6" y="6" width="49" height="20.5"/>
+                                        <color key="tintColor" red="0.15991484959999999" green="0.13213001469999999" blue="0.20717005080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Left" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xlc-ce-zve">
+                                        <rect key="frame" x="6" y="29.5" width="49" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="52" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8VH-ZQ-GUn">
+                                        <rect key="frame" x="61" y="7" width="41.5" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Xlc-ce-zve" firstAttribute="centerX" secondItem="gLZ-mi-FWw" secondAttribute="centerX" id="0Jc-4a-rAW"/>
+                                    <constraint firstAttribute="bottom" secondItem="Xlc-ce-zve" secondAttribute="bottom" constant="6" id="6KW-QY-Qii"/>
+                                    <constraint firstItem="Xlc-ce-zve" firstAttribute="top" secondItem="gLZ-mi-FWw" secondAttribute="bottom" constant="3" id="EPE-Rb-0E8"/>
+                                    <constraint firstItem="gLZ-mi-FWw" firstAttribute="top" secondItem="8TY-wG-r26" secondAttribute="top" constant="6" id="GCk-TL-4VV"/>
+                                    <constraint firstItem="8VH-ZQ-GUn" firstAttribute="centerY" secondItem="8TY-wG-r26" secondAttribute="centerY" id="f4R-Mj-a02"/>
+                                    <constraint firstAttribute="trailing" secondItem="8VH-ZQ-GUn" secondAttribute="trailing" constant="6" id="gGg-y3-ySy"/>
+                                    <constraint firstItem="Xlc-ce-zve" firstAttribute="width" secondItem="gLZ-mi-FWw" secondAttribute="width" id="i8M-ms-lBd"/>
+                                    <constraint firstItem="gLZ-mi-FWw" firstAttribute="leading" secondItem="8TY-wG-r26" secondAttribute="leading" constant="6" id="ilN-sW-BB6"/>
+                                    <constraint firstItem="8VH-ZQ-GUn" firstAttribute="leading" secondItem="gLZ-mi-FWw" secondAttribute="trailing" constant="6" id="ux1-Ow-qyH"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="errorCard" translatesAutoresizingMaskIntoConstraints="NO" id="lLg-X3-Pt4">
+                                <rect key="frame" x="102.5" y="216" width="170" height="235"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="170" id="9kC-OZ-cY8"/>
+                                    <constraint firstAttribute="height" constant="235" id="RJS-RG-v76"/>
+                                </constraints>
+                            </imageView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xil-aI-zZr">
+                                <rect key="frame" x="121" y="206" width="133" height="255"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Tl7-R2-MNx">
+                                        <rect key="frame" x="0.0" y="0.0" width="133" height="194"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jacks Slapped" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nPc-49-fuy">
+                                                <rect key="frame" x="0.0" y="0.0" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="jack amount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EDN-jT-LJa">
+                                                <rect key="frame" x="0.0" y="34" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cards Slapped" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8J6-i9-rF2">
+                                                <rect key="frame" x="0.0" y="68" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="card amount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sUF-aY-Cke">
+                                                <rect key="frame" x="0.0" y="102" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jacks Missed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CD0-cY-coQ">
+                                                <rect key="frame" x="0.0" y="136" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="missed amount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZgE-pP-8In">
+                                                <rect key="frame" x="0.0" y="170" width="133" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3SA-CX-APw" customClass="ButtonDesign" customModule="SlapJack" customModuleProvider="target">
+                                        <rect key="frame" x="26.5" y="204" width="80" height="51"/>
+                                        <color key="backgroundColor" red="0.15991484959999999" green="0.13213001469999999" blue="0.20717005080000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="80" id="mfM-XC-xT6"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" red="1" green="0.040711341620000001" blue="0.1260834495" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Tl7-R2-MNx" firstAttribute="top" secondItem="Xil-aI-zZr" secondAttribute="top" id="8Fm-vT-OF2"/>
+                                    <constraint firstItem="Tl7-R2-MNx" firstAttribute="leading" secondItem="Xil-aI-zZr" secondAttribute="leading" id="98o-yP-NId"/>
+                                    <constraint firstItem="3SA-CX-APw" firstAttribute="centerX" secondItem="Tl7-R2-MNx" secondAttribute="centerX" id="GsL-86-yoB"/>
+                                    <constraint firstItem="3SA-CX-APw" firstAttribute="top" secondItem="Tl7-R2-MNx" secondAttribute="bottom" constant="10" id="edE-QE-gl1"/>
+                                    <constraint firstAttribute="bottom" secondItem="3SA-CX-APw" secondAttribute="bottom" id="eqj-mg-S2s"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tl7-R2-MNx" secondAttribute="trailing" id="pxW-w9-eFq"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.073511112840000004" green="0.5427842933" blue="0.13179176870000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="DHJ-vV-CL5" secondAttribute="bottom" constant="30" id="1Nh-Oe-6hg"/>
+                            <constraint firstItem="8TY-wG-r26" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="ICA-he-yKc"/>
+                            <constraint firstItem="Xil-aI-zZr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RMj-xj-q0C"/>
+                            <constraint firstItem="8TY-wG-r26" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="cu8-q8-iAN"/>
+                            <constraint firstItem="lLg-X3-Pt4" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="e8V-Th-KcM"/>
+                            <constraint firstItem="Xil-aI-zZr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hze-9I-nXX"/>
+                            <constraint firstItem="DHJ-vV-CL5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rIE-Vn-Pc5"/>
+                            <constraint firstItem="lLg-X3-Pt4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uwB-6k-VZ6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="Xil-aI-zZr"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="cardImageView" destination="lLg-X3-Pt4" id="fgK-dn-0zv"/>
+                        <outlet property="cardsAmountLabel" destination="sUF-aY-Cke" id="kog-02-WC6"/>
+                        <outlet property="cardsLeftLabel" destination="8VH-ZQ-GUn" id="ZnE-iB-Qo1"/>
+                        <outlet property="cardsLeftView" destination="8TY-wG-r26" id="9oK-6q-gYT"/>
+                        <outlet property="gameOverView" destination="Xil-aI-zZr" id="mtl-35-sK5"/>
+                        <outlet property="jacksAmountLabel" destination="EDN-jT-LJa" id="1Xz-N4-cj9"/>
+                        <outlet property="missedAmountLabel" destination="ZgE-pP-8In" id="3zu-ao-5Bt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="128.80000000000001" y="132.68365817091455"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="errorCard" width="113" height="157"/>
+    </resources>
+</document>

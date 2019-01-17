@@ -7,15 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		748BF0E721EF819500717F3E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748BF0E621EF819500717F3E /* Card.swift */; };
+		748BF0E921EF99D000717F3E /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748BF0E821EF99D000717F3E /* Deck.swift */; };
 		74BB8ECE21EE419A00332026 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8ECD21EE419A00332026 /* AppDelegate.swift */; };
 		74BB8ED021EE419A00332026 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8ECF21EE419A00332026 /* ViewController.swift */; };
 		74BB8ED321EE419A00332026 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74BB8ED121EE419A00332026 /* Main.storyboard */; };
 		74BB8ED621EE419A00332026 /* SlapJack.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8ED421EE419A00332026 /* SlapJack.xcdatamodeld */; };
 		74BB8ED821EE419C00332026 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74BB8ED721EE419C00332026 /* Assets.xcassets */; };
 		74BB8EDB21EE419C00332026 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74BB8ED921EE419C00332026 /* LaunchScreen.storyboard */; };
+		74BB8EE321EE49EB00332026 /* ButtonDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EE221EE49EB00332026 /* ButtonDesign.swift */; };
+		74BB8EE521EE4DEE00332026 /* ViewBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EE421EE4DEE00332026 /* ViewBackground.swift */; };
+		74BB8EE921EEDB5300332026 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EE821EEDB5300332026 /* Stack.swift */; };
+		74BB8EED21EEDCBD00332026 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EEC21EEDCBD00332026 /* NetworkController.swift */; };
+		74BB8EEF21EEDFB800332026 /* ViewDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EEE21EEDFB800332026 /* ViewDesign.swift */; };
+		74BB8EF121EF7A9F00332026 /* DeckController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB8EF021EF7A9F00332026 /* DeckController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		748BF0E621EF819500717F3E /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		748BF0E821EF99D000717F3E /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		74BB8ECA21EE419A00332026 /* SlapJack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlapJack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74BB8ECD21EE419A00332026 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		74BB8ECF21EE419A00332026 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +34,12 @@
 		74BB8ED721EE419C00332026 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74BB8EDA21EE419C00332026 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74BB8EDC21EE419C00332026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		74BB8EE221EE49EB00332026 /* ButtonDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDesign.swift; sourceTree = "<group>"; };
+		74BB8EE421EE4DEE00332026 /* ViewBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBackground.swift; sourceTree = "<group>"; };
+		74BB8EE821EEDB5300332026 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		74BB8EEC21EEDCBD00332026 /* NetworkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
+		74BB8EEE21EEDFB800332026 /* ViewDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDesign.swift; sourceTree = "<group>"; };
+		74BB8EF021EF7A9F00332026 /* DeckController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,14 +73,54 @@
 			isa = PBXGroup;
 			children = (
 				74BB8ECD21EE419A00332026 /* AppDelegate.swift */,
-				74BB8ECF21EE419A00332026 /* ViewController.swift */,
-				74BB8ED121EE419A00332026 /* Main.storyboard */,
+				74BB8EEB21EEDC5700332026 /* Controllers */,
+				74BB8EEA21EEDC1C00332026 /* Views */,
+				74BB8EE721EEDB3D00332026 /* Model */,
 				74BB8ED721EE419C00332026 /* Assets.xcassets */,
-				74BB8ED921EE419C00332026 /* LaunchScreen.storyboard */,
 				74BB8EDC21EE419C00332026 /* Info.plist */,
-				74BB8ED421EE419A00332026 /* SlapJack.xcdatamodeld */,
 			);
 			path = SlapJack;
+			sourceTree = "<group>";
+		};
+		74BB8EE621EE606200332026 /* UI Design */ = {
+			isa = PBXGroup;
+			children = (
+				74BB8EE221EE49EB00332026 /* ButtonDesign.swift */,
+				74BB8EEE21EEDFB800332026 /* ViewDesign.swift */,
+				74BB8EE421EE4DEE00332026 /* ViewBackground.swift */,
+			);
+			path = "UI Design";
+			sourceTree = "<group>";
+		};
+		74BB8EE721EEDB3D00332026 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				74BB8ED421EE419A00332026 /* SlapJack.xcdatamodeld */,
+				74BB8EE821EEDB5300332026 /* Stack.swift */,
+				748BF0E821EF99D000717F3E /* Deck.swift */,
+				748BF0E621EF819500717F3E /* Card.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		74BB8EEA21EEDC1C00332026 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				74BB8ED121EE419A00332026 /* Main.storyboard */,
+				74BB8ED921EE419C00332026 /* LaunchScreen.storyboard */,
+				74BB8EE621EE606200332026 /* UI Design */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		74BB8EEB21EEDC5700332026 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				74BB8ECF21EE419A00332026 /* ViewController.swift */,
+				74BB8EF021EF7A9F00332026 /* DeckController.swift */,
+				74BB8EEC21EEDCBD00332026 /* NetworkController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +194,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74BB8EF121EF7A9F00332026 /* DeckController.swift in Sources */,
+				74BB8EEF21EEDFB800332026 /* ViewDesign.swift in Sources */,
+				74BB8EE321EE49EB00332026 /* ButtonDesign.swift in Sources */,
 				74BB8ED021EE419A00332026 /* ViewController.swift in Sources */,
 				74BB8ECE21EE419A00332026 /* AppDelegate.swift in Sources */,
 				74BB8ED621EE419A00332026 /* SlapJack.xcdatamodeld in Sources */,
+				74BB8EE921EEDB5300332026 /* Stack.swift in Sources */,
+				748BF0E721EF819500717F3E /* Card.swift in Sources */,
+				74BB8EED21EEDCBD00332026 /* NetworkController.swift in Sources */,
+				748BF0E921EF99D000717F3E /* Deck.swift in Sources */,
+				74BB8EE521EE4DEE00332026 /* ViewBackground.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
