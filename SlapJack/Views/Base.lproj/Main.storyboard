@@ -46,6 +46,9 @@
                                         <real key="value" value="2"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="startGameButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e3b-Da-drw"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8TY-wG-r26" customClass="ViewDesign" customModule="SlapJack" customModuleProvider="target">
                                 <rect key="frame" x="16" y="36" width="108.5" height="56"/>
@@ -185,11 +188,6 @@
                             <constraint firstItem="lLg-X3-Pt4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uwB-6k-VZ6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="Xil-aI-zZr"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="cardImageView" destination="lLg-X3-Pt4" id="fgK-dn-0zv"/>

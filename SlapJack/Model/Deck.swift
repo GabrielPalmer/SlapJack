@@ -19,6 +19,6 @@ extension Deck {
         self.init(context: context)
         self.id = id
         self.cardsRemaining = remaining
-        self.dateCreated = Date()
+        self.lastAccessed = Date()
     }
 }

@@ -9,8 +9,8 @@
     </entity>
     <entity name="Deck" representedClassName="Deck" syncable="YES" codeGenerationType="class">
         <attribute name="cardsRemaining" optional="YES" attributeType="Integer 16" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastAccessed" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="cards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Card" inverseName="deck" inverseEntity="Card" syncable="YES"/>
     </entity>
     <elements>

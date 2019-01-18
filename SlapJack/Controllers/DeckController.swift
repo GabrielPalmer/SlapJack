@@ -31,7 +31,9 @@ class DeckController {
             
             if savedDecks.isEmpty {
                 
-                
+                createDeck { (deck) in
+                    completion(deck)
+                }
                 
             } else if savedDecks.count > 1 {
                 
@@ -59,7 +61,7 @@ class DeckController {
         }
     }
     
-    //call when deck doesn't exist when app starts or deck expired
+    //call when deck doesn't exist when app first runs or deck expired
     func createDeck(completion: @escaping (Deck?) -> Void) {
         
         let url = URL(string: baseURL + "new/")!
@@ -80,7 +82,7 @@ class DeckController {
                         let id = deck.id {
                         
                         self.saveDeck()
-                        self.shuffleDeck(id: id)
+                        self.shuffleDeck(deck)
                         
                         print("new deck created with id: \(id)")
                         completion(deck)
@@ -111,14 +113,12 @@ class DeckController {
             fatalError("failed to clear cards from deck")
         }
         
-        guard let id = deck.id else { fatalError("deck did not have an id") }
-        
-        shuffleDeck(id: id)
+        shuffleDeck(deck)
         deck.cardsRemaining = 52
-        
+        saveDeck()
     }
     
-    func drawCard(from deck: Deck, completion: @escaping (Dictionary<String, Any>?) -> Void) {
+    func drawCard(from deck: Deck, completion: @escaping (Card?) -> Void) {
         
         guard let id = deck.id else { fatalError("deck did not have an id") }
         let url = URL(string: baseURL + "\(id)/draw/?count=1")!
@@ -135,12 +135,13 @@ class DeckController {
                 do {
                     let jsonObjects = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     if let topDictionary = jsonObjects as? Dictionary<String, Any>,
-                        let cardsLeft = topDictionary["cards"] as? Int16,
+                        let cardsLeft = topDictionary["remaining"] as? Int16,
                         let cardsDictionary = topDictionary["cards"] as? [Dictionary<String, Any>],
                         let card = cardsDictionary.first {
                         
                         deck.cardsRemaining = cardsLeft
-                        completion(card)
+                        completion(Card(dictionary: card))
+                        self.saveDeck()
                         return
                     }
                 } catch {
@@ -150,7 +151,7 @@ class DeckController {
                 }
             }
             
-            print("failed to decode card from data")
+            print("failed to decode card dictionary from data")
             completion(nil)
             return
             
@@ -167,14 +168,28 @@ class DeckController {
         }
     }
     
-    fileprivate func shuffleDeck(id: String) {
-        
+    func lastSavedCard() -> Card? {
+        let fetchRequest: NSFetchRequest<Card> = Card.fetchRequest()
+        do {
+            let savedCards = try Stack.context.fetch(fetchRequest)
+            return savedCards.last
+        } catch {
+            return nil
+        }
+    }
+    
+    func shuffleDeck(_ deck: Deck) {
+        guard let id = deck.id else { fatalError("deck did not have an id") }
         let url = URL(string: baseURL + "\(id)/shuffle/")!
         
         NetworkController.performNetworkRequest(url: url) { (_, error) in
             if error != nil {
                 print("there was an error shuffling the deck")
+            } else {
+                deck.cardsRemaining = 52
             }
+            
+            self.saveDeck()
         }
     }
     
