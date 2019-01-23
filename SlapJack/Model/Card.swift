@@ -21,7 +21,6 @@ extension Card {
         self.suit = suit
         self.value = value
         self.imageURL = imageURL
-        self.wasSlapped = false
     }
     
 }

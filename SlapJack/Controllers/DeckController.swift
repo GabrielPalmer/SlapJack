@@ -13,7 +13,7 @@ import UIKit
 class DeckController {
     static let shared = DeckController()
     
-    fileprivate let test_deck_id = "smt6qibmy08o"
+    // kqp0keeem4bz
     fileprivate let baseURL = "https://deckofcardsapi.com/api/deck/"
     
     /*
@@ -24,42 +24,87 @@ class DeckController {
     "<deck_id>/draw/?count=1" to draw a card
     */
     
-    func getUnfinishedDeck(completion: @escaping (Deck?) -> Void) {
+    func loadDeck(completion: @escaping (Deck?) -> Void) {
+        var deck: Deck?
         let request: NSFetchRequest<Deck> = Deck.fetchRequest()
+        
+        let networkGroup = DispatchGroup()
+        networkGroup.enter()
+        
         do {
             var savedDecks = try Stack.context.fetch(request)
             
             if savedDecks.isEmpty {
                 
-                createDeck { (deck) in
-                    completion(deck)
+                createDeck { (newDeck) in
+                    deck = newDeck
+                    networkGroup.leave()
                 }
                 
             } else if savedDecks.count > 1 {
                 
-                let deck = savedDecks.removeFirst()
+                deck = savedDecks.removeFirst()
                 print("Deleted unexpected decks in core data")
                 for d in savedDecks {
-                    Stack.context.delete(d)
+                    deleteDeck(d)
                 }
                 
                 saveDeck()
-                completion(deck)
-                return
+                networkGroup.leave()
                 
             } else {
-                completion(savedDecks.first)
-                return
+                //saved deck loaded successfully
+                deck = savedDecks.first
+                networkGroup.leave()
             }
-            
-            
             
         } catch {
             print("saved game could not be loaded")
+            
+            do {
+                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Deck.fetchRequest()
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                try Stack.context.execute(deleteRequest)
+            } catch {
+                fatalError("failed to delete saved deck")
+            }
+            
+            createDeck { (newDeck) in
+                deck = newDeck
+                networkGroup.leave()
+            }
+        }
+        
+        //deck now holds the correct value
+        
+        networkGroup.wait()
+        
+        if let unwrappedDeck = deck {
+            guard let date = unwrappedDeck.lastAccessed else { fatalError("deck did not have a date") }
+            
+            //check if two weeks have passed and deck expired
+            if date.timeIntervalSinceNow > 1209600.0 {
+                deleteDeck(unwrappedDeck)
+                createDeck(completion: { (newDeck) in
+                    if let newDeck = newDeck {
+                        completion(newDeck)
+                        return
+                    } else {
+                        completion(nil)
+                        return
+                    }
+                })
+            } else {
+                completion(unwrappedDeck)
+                return
+            }
+        } else {
             completion(nil)
             return
         }
+        
     }
+    
     
     //call when deck doesn't exist when app first runs or deck expired
     func createDeck(completion: @escaping (Deck?) -> Void) {
@@ -81,8 +126,7 @@ class DeckController {
                         let deck = Deck(dictionary: dictionary),
                         let id = deck.id {
                         
-                        self.saveDeck()
-                        self.shuffleDeck(deck)
+                        self.resetDeck(deck)
                         
                         print("new deck created with id: \(id)")
                         completion(deck)
@@ -102,8 +146,8 @@ class DeckController {
         }
     }
     
-    //call when starting a new game
-    func resetDeck(deck: Deck) {
+    
+    func resetDeck(_ deck: Deck, completion: @escaping () -> Void) {
         
         do {
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Card.fetchRequest()
@@ -113,12 +157,24 @@ class DeckController {
             fatalError("failed to clear cards from deck")
         }
         
-        shuffleDeck(deck)
-        deck.cardsRemaining = 52
-        saveDeck()
+        guard let id = deck.id else { fatalError("deck did not have an id") }
+        let url = URL(string: baseURL + "\(id)/shuffle/")!
+        
+        NetworkController.performNetworkRequest(url: url) { (_, error) in
+            DispatchQueue.main.async {
+                if error != nil {
+                    print("there was an error shuffling the deck")
+                } else {
+                    deck.cardsRemaining = 52
+                }
+                
+                self.saveDeck()
+            }
+        }
     }
     
-    func drawCard(from deck: Deck, completion: @escaping (Card?) -> Void) {
+    
+    func drawCard(from deck: Deck, completion: @escaping (Dictionary<String, Any>?) -> Void) {
         
         guard let id = deck.id else { fatalError("deck did not have an id") }
         let url = URL(string: baseURL + "\(id)/draw/?count=1")!
@@ -136,12 +192,13 @@ class DeckController {
                     let jsonObjects = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     if let topDictionary = jsonObjects as? Dictionary<String, Any>,
                         let cardsLeft = topDictionary["remaining"] as? Int16,
-                        let cardsDictionary = topDictionary["cards"] as? [Dictionary<String, Any>],
-                        let card = cardsDictionary.first {
+                        let cardsDictionary = topDictionary["cards"] as? [Dictionary<String, Any>] {
                         
-                        deck.cardsRemaining = cardsLeft
-                        completion(Card(dictionary: card))
-                        self.saveDeck()
+                        DispatchQueue.main.async {
+                            deck.cardsRemaining = cardsLeft
+                        }
+                        
+                        completion(cardsDictionary.first)
                         return
                     }
                 } catch {
@@ -151,12 +208,13 @@ class DeckController {
                 }
             }
             
-            print("failed to decode card dictionary from data")
+            print("no data returned")
             completion(nil)
             return
             
         }
     }
+    
     
     func imageForCard(imageURL: String, completion: @escaping (UIImage) -> Void) {
         NetworkController.performNetworkRequest(url: URL(string: imageURL)!) { (data, error) in
@@ -168,40 +226,41 @@ class DeckController {
         }
     }
     
-    func lastSavedCard() -> Card? {
-        let fetchRequest: NSFetchRequest<Card> = Card.fetchRequest()
-        do {
-            let savedCards = try Stack.context.fetch(fetchRequest)
-            return savedCards.last
-        } catch {
-            return nil
-        }
-    }
     
-    func shuffleDeck(_ deck: Deck) {
-        guard let id = deck.id else { fatalError("deck did not have an id") }
-        let url = URL(string: baseURL + "\(id)/shuffle/")!
+    func slappedCardsInfo(for deck: Deck) -> Dictionary<String, Int> {
         
-        NetworkController.performNetworkRequest(url: url) { (_, error) in
-            if error != nil {
-                print("there was an error shuffling the deck")
-            } else {
-                deck.cardsRemaining = 52
-            }
-            
-            self.saveDeck()
+        var info: Dictionary<String, Int> = ["jacks" : 0, "other" : 0]
+        
+        guard let cards = deck.slappedCards?.allObjects as? [Card], cards.count > 0 else {
+            return info
         }
+        
+        for card in cards {
+            if card.value == "JACK" {
+                info["jacks"]! += 1
+            } else {
+                info["other"]! += 1
+            }
+        }
+        
+        return info
     }
     
-    func saveDeck() {
+    @discardableResult
+    func saveDeck() -> Bool {
         do {
             try Stack.context.save()
+            return true
         } catch {
             print("failed to save deck")
+            print(error)
+            return false
         }
     }
     
-    func deleteDeck(_ deck: Deck) {
+    
+    //called when deleting an expired deck or unexpected decks from load
+    fileprivate func deleteDeck(_ deck: Deck) {
         Stack.context.delete(deck)
         saveDeck()
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Network
+import CoreData
 
 class ViewController: UIViewController {
     
@@ -17,19 +18,72 @@ class ViewController: UIViewController {
     @IBOutlet weak var gameOverView: UIView!
     @IBOutlet weak var jacksAmountLabel: UILabel!
     @IBOutlet weak var cardsAmountLabel: UILabel!
-    @IBOutlet weak var missedAmountLabel: UILabel!
     
+    @IBOutlet weak var startGameButton: ButtonDesign!
+    @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var cardImageView: UIImageView!
     
     let monitor = NWPathMonitor()
     var connectedToNetwork = true
     
+    var deck: Deck!
+    var currentCardInfo: Dictionary<String, Any>? {
+        didSet {
+            updateCardImage()
+        }
+    }
+    
     var timer: Timer?
-    var deck: Deck?
-    var currentCard: Card?
+    var pausedImage = UIImage(named: "cardBack") //used to hold current card image between pauses
+    var paused: Bool? {
+        //when set to nil, pause and hide
+        didSet {
+            if let paused = paused {
+                pauseButton.isHidden = false
+                if paused {
+                    timer?.invalidate()
+                    pauseButton.setBackgroundImage(UIImage(named: "play"), for: .normal)
+                    pausedImage = cardImageView.image
+                    cardImageView.image = UIImage(named: "cardBack")
+                } else {
+                    pauseButton.setBackgroundImage(UIImage(named: "pause"), for: .normal)
+                    cardImageView.image = pausedImage
+                    let myTimer = Timer(timeInterval: 1.0, target: self, selector: #selector(timerFired(sender:)), userInfo: nil, repeats: true)
+                    timer = myTimer
+                    RunLoop.current.add(myTimer, forMode: .common)
+                }
+            } else {
+                timer?.invalidate()
+                pauseButton.isHidden = true
+            }
+        }
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        DeckController.shared.loadDeck { (savedDeck) in
+            if let unwrappedDeck = savedDeck,
+                let date = unwrappedDeck.lastAccessed,
+                let id = unwrappedDeck.id {
+                self.deck = unwrappedDeck
+                
+                print("Deck Info\nid: \(id)\ncards left: \(unwrappedDeck.cardsRemaining)\nlast accessed: \(date.formatToString(style: .long))")
+                unwrappedDeck.lastAccessed = Date()
+                
+                //deck would have 0 cards if they played a game then quit before starting another
+                //deck would have 52 cards if it was just created
+                if unwrappedDeck.cardsRemaining == 0 || unwrappedDeck.cardsRemaining == 52 {
+                    self.newGame()
+                } else {
+                    self.continueGame()
+                }
+            } else {
+                //close app here
+                fatalError("error with api")
+            }
+        }
         
         //called when connection changes
         monitor.pathUpdateHandler = { path in
@@ -41,80 +95,64 @@ class ViewController: UIViewController {
         }
         let queue = DispatchQueue(label: "monitor")
         monitor.start(queue: queue)
-
-        loadDeckForGame()
-        if let date = deck?.lastAccessed {
-            print(date.description)
-        }
+        
         view.updateBackground()
+        
     }
     
-    func loadDeckForGame() {
+    //========================================
+    // MARK: - Functions
+    //========================================
+    
+    func newGame() {
+        DeckController.shared.resetDeck(deck)
+        cardImageView.isHidden = false
+        cardsLeftView.isHidden = true
+        cardsLeftLabel.text = "52"
+        currentCardInfo = nil
+        paused = nil
+        startGameButton.isHidden = false
+    }
+    
+    //should only be called once, when the app starts each time
+    func continueGame() {
+        cardsLeftLabel.text = String(deck.cardsRemaining)
+        cardsLeftView.isHidden = false
+        startGameButton.isHidden = true
+        paused = true
+    }
+    
+    func endGame() {
+        cardsLeftView.isHidden = true
+        pauseButton.isHidden = true
+        cardImageView.isHidden = true
         
-        DeckController.shared.getUnfinishedDeck { (incompleteDeck) in
-            if let unwrappedDeck = incompleteDeck {
-                guard let date = unwrappedDeck.lastAccessed else { fatalError("deck did not have a date") }
-                
-                //check if two weeks have passed and deck expired
-                if date.timeIntervalSinceNow > 1209600.0 {
-                    DeckController.shared.deleteDeck(unwrappedDeck)
-                    DeckController.shared.createDeck(completion: { (newDeck) in
-                        guard let newDeck = newDeck else { fatalError("could not connect to deckofcards API") }
-                        self.deck = newDeck
-                    })
-                } else {
-                    //successfully got saved deck
-                    self.deck = unwrappedDeck
-                }
-            } else {
-                //runs when app is started the very first time
-                DeckController.shared.createDeck(completion: { (newDeck) in
-                    guard let newDeck = newDeck else { fatalError("could not connect to deckofcards API") }
-                    self.deck = newDeck
-                })
-            }
-        }
+        let gameInfo = DeckController.shared.slappedCardsInfo(for: deck)
         
-        //info on deck when app loads
-        if let deck = deck, let date = deck.lastAccessed {
-            print("cards left: \(deck.cardsRemaining)\nlast accessed: \(date.formatToString(style: .long))")
-            deck.lastAccessed = Date()
-            cardsLeftLabel.text = String(deck.cardsRemaining)
-        }
+        jacksAmountLabel.text = "\(gameInfo["jacks"]!) out of 4"
+        cardsAmountLabel.text = String(gameInfo["other"]!)
         
-        //update currentCard to last card from previous game
-        currentCard = DeckController.shared.lastSavedCard()
-        updateCardImage()
+        gameOverView.isHidden = false
     }
     
     func drawCard() {
         
-        //temporary safety measure
-        if let deck = deck, deck.cardsRemaining == 0 {
-            print("out of cards")
-            return
-        }
-        
-        guard let deck = deck else { fatalError("handle error here") }
-        
         DeckController.shared.drawCard(from: deck) { (card) in
             if let card = card {
-                self.currentCard = card
-                self.updateCardImage()
+                self.currentCardInfo = card
                 DispatchQueue.main.async {
-                    self.cardsLeftLabel.text = String(deck.cardsRemaining)
+                    self.cardsLeftLabel.text = String(self.deck.cardsRemaining)
                 }
             } else {
-                fatalError("handle error here")
+                fatalError("did not draw a card")
             }
         }
     }
     
-    
     func updateCardImage() {
         //if currentCard is nil then you must be starting a new game so show card back
         
-        if let card = currentCard, let url = card.imageURL {
+        if let card = currentCardInfo, let url = card["image"] as? String {
             DeckController.shared.imageForCard(imageURL: url, completion: { (image) in
                 DispatchQueue.main.async {
                     self.cardImageView.image = image
@@ -124,6 +162,19 @@ class ViewController: UIViewController {
             cardImageView.image = UIImage(named: "cardBack")
         }
     }
+    
+    @objc func timerFired(sender: Timer) {
+        if deck.cardsRemaining > 0 {
+            drawCard()
+        } else {
+            timer?.invalidate()
+            endGame()
+        }
+    }
+    
+    //========================================
+    // MARK: - Device Motions
+    //========================================
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -133,18 +184,50 @@ class ViewController: UIViewController {
         }
     }
     
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        
+        if let currentCard = currentCardInfo,
+            let cardEntity = Card(dictionary: currentCard),
+            let paused = paused, !paused {
+            
+            deck.addToSlappedCards(cardEntity)
+            DeckController.shared.saveDeck()
+            
+            //immediatly advance to next card so
+            //stops currentCard from being added twice
+            timer?.fire()
+        } else {
+            print("slapped at invalid time")
+        }
+    }
+    
     //========================================
     // MARK: - Actions
     //========================================
     
     @IBAction func startGameButtonTapped(_ sender: Any) {
-        
-        //reset deck when starting new game
-        
-        drawCard()
+        cardsLeftView.isHidden = false
+        startGameButton.isHidden = true //animate
+        paused = false
+    }
+    
+    @IBAction func doneButtonTapped(_ sender: Any) {
+        gameOverView.isHidden = true
+        newGame()
+    }
+    
+    @IBAction func pauseButtonTapped(_ sender: Any) {
+        guard let unwrappedPaused = paused else {
+            print("unable to pause")
+            return
+            
+        }
+        paused = !unwrappedPaused
     }
     
 }
+
+
 
 //========================================
 // MARK: - Extensions

@@ -13,7 +13,7 @@ enum Stack {
     static let container: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "SlapJack")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            print(storeDescription)
+            print(storeDescription) //to find SQlite file
             if let error = error {
                 fatalError("unresolved error \(error)")
             }
