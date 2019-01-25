@@ -13,7 +13,6 @@ import UIKit
 class DeckController {
     static let shared = DeckController()
     
-    // kqp0keeem4bz
     fileprivate let baseURL = "https://deckofcardsapi.com/api/deck/"
     
     /*
@@ -37,6 +36,7 @@ class DeckController {
             if savedDecks.isEmpty {
                 
                 createDeck { (newDeck) in
+                    print("finished creating deck because none existed")
                     deck = newDeck
                     networkGroup.leave()
                 }
@@ -54,6 +54,7 @@ class DeckController {
                 
             } else {
                 //saved deck loaded successfully
+                print("saved deck loaded")
                 deck = savedDecks.first
                 networkGroup.leave()
             }
@@ -70,6 +71,7 @@ class DeckController {
             }
             
             createDeck { (newDeck) in
+                print("finished creating new deck because saved deck could not be fetched")
                 deck = newDeck
                 networkGroup.leave()
             }
@@ -78,6 +80,7 @@ class DeckController {
         //deck now holds the correct value
         
         networkGroup.wait()
+        print("network processes complete")
         
         if let unwrappedDeck = deck {
             guard let date = unwrappedDeck.lastAccessed else { fatalError("deck did not have a date") }
@@ -123,14 +126,13 @@ class DeckController {
                 do {
                     let jsonObjects = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     if let dictionary = jsonObjects as? Dictionary<String, Any>,
-                        let deck = Deck(dictionary: dictionary),
-                        let id = deck.id {
+                        let deck = Deck(dictionary: dictionary) {
                         
-                        self.resetDeck(deck)
-                        
-                        print("new deck created with id: \(id)")
-                        completion(deck)
-                        return
+                        self.resetDeck(deck, completion: {
+                            print("new deck created")
+                            completion(deck)
+                            return
+                        })
                     }
                 } catch {
                     print("failed to decode new deck from json")
@@ -138,11 +140,6 @@ class DeckController {
                     return
                 }
             }
-            
-            print("failed to create new deck from data")
-            completion(nil)
-            return
-            
         }
     }
     
@@ -159,17 +156,18 @@ class DeckController {
         
         guard let id = deck.id else { fatalError("deck did not have an id") }
         let url = URL(string: baseURL + "\(id)/shuffle/")!
-        
+
         NetworkController.performNetworkRequest(url: url) { (_, error) in
-            DispatchQueue.main.async {
-                if error != nil {
-                    print("there was an error shuffling the deck")
-                } else {
-                    deck.cardsRemaining = 52
-                }
-                
-                self.saveDeck()
+            if error != nil {
+                print("there was an error shuffling the deck")
+            } else {
+                deck.cardsRemaining = 52
             }
+            
+            completion()
+            self.saveDeck()
+            
+            
         }
     }
     
@@ -198,7 +196,16 @@ class DeckController {
                             deck.cardsRemaining = cardsLeft
                         }
                         
-                        completion(cardsDictionary.first)
+                        var card = cardsDictionary.first
+                        guard card != nil else {
+                            //this is probably unreachable
+                            print("no cards were returned")
+                            completion(nil)
+                            return
+                        }
+                        
+                        card!["wasSlapped"] = false
+                        completion(card)
                         return
                     }
                 } catch {
@@ -230,26 +237,33 @@ class DeckController {
     func slappedCardsInfo(for deck: Deck) -> Dictionary<String, Int> {
         
         var info: Dictionary<String, Int> = ["jacks" : 0, "other" : 0]
+        let request: NSFetchRequest<Card> = Card.fetchRequest()
         
-        guard let cards = deck.slappedCards?.allObjects as? [Card], cards.count > 0 else {
+        
+        do {
+            let cards = try Stack.context.fetch(request)
+            
+            for card in cards {
+                if card.value == "JACK" {
+                    info["jacks"]! += 1
+                } else {
+                    info["other"]! += 1
+                }
+            }
+            
+            return info
+            
+        } catch {
+            print("unable to fetch cards")
             return info
         }
-        
-        for card in cards {
-            if card.value == "JACK" {
-                info["jacks"]! += 1
-            } else {
-                info["other"]! += 1
-            }
-        }
-        
-        return info
     }
     
     @discardableResult
     func saveDeck() -> Bool {
         do {
             try Stack.context.save()
+            print("deck was saved")
             return true
         } catch {
             print("failed to save deck")
