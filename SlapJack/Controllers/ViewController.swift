@@ -45,6 +45,7 @@ class ViewController: UIViewController {
                     pauseButton.setBackgroundImage(UIImage(named: "play"), for: .normal)
                     pausedImage = cardImageView.image
                     cardImageView.image = UIImage(named: "cardBack")
+                    DeckController.shared.saveDeck()
                 } else {
                     pauseButton.setBackgroundImage(UIImage(named: "pause"), for: .normal)
                     cardImageView.image = pausedImage
@@ -64,6 +65,27 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.updateBackground()
         
+        //called when connection changes
+        monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                self.connectedToNetwork = true
+            } else {
+                self.connectedToNetwork = false
+                DispatchQueue.main.async {
+                    if self.paused == false {
+                        self.paused = true
+                    }
+                }
+            }
+        }
+        let queue = DispatchQueue(label: "monitor")
+        monitor.start(queue: queue)
+        
+        //this is so the view controller can pause the game
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        
         DeckController.shared.loadDeck { (savedDeck) in
             if let unwrappedDeck = savedDeck,
                 let date = unwrappedDeck.lastAccessed,
@@ -81,7 +103,7 @@ class ViewController: UIViewController {
                 }
             } else {
                 let alertController = UIAlertController(
-                    title: "Unable to connect to the required API\nTry again later with a better network connection",
+                    title: "Unable to connect to the required API\n\nTry again later with a better network connection",
                     message: nil,
                     preferredStyle: .alert)
                 
@@ -91,25 +113,12 @@ class ViewController: UIViewController {
                     handler: { (_) in
                         fatalError("no internet connection")
                 }))
-            }
-        }
-        
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        
-        //called when connection changes
-        monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                self.connectedToNetwork = true
-            } else {
-                self.connectedToNetwork = false
-                if self.paused == false {
-                    self.paused = true
+                
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true)
                 }
             }
         }
-        let queue = DispatchQueue(label: "monitor")
-        monitor.start(queue: queue)
     }
     
     //========================================
@@ -117,8 +126,9 @@ class ViewController: UIViewController {
     //========================================
     
     func newGame() {
-        self.startGameButton.isHidden = false
-        self.cardImageView.isHidden = false
+        showStartGameButton(true)
+        showCardImageView(true)
+        //self.cardImageView.isHidden = false
         cardsLeftView.isHidden = true
         cardsLeftLabel.text = "52"
         currentCardInfo = nil
@@ -146,7 +156,8 @@ class ViewController: UIViewController {
         
         cardsLeftView.isHidden = true
         pauseButton.isHidden = true
-        cardImageView.isHidden = true
+        //cardImageView.isHidden = true
+        showCardImageView(false)
         
         jacksAmountLabel.text = "\(gameInfo["jacks"]!) out of 4"
         cardsAmountLabel.text = String(gameInfo["other"]!)
@@ -205,6 +216,10 @@ class ViewController: UIViewController {
             title: "OK",
             style: .default,
             handler: nil))
+        
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true)
+        }
     }
     
     //========================================
@@ -241,14 +256,19 @@ class ViewController: UIViewController {
     //========================================
     
     @IBAction func startGameButtonTapped(_ sender: Any) {
+        
+        if !connectedToNetwork {
+            showNetworkFailure()
+            return
+        }
+        
         cardsLeftView.isHidden = false
-        startGameButton.isHidden = true //animate
+        showStartGameButton(false)
         paused = false
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         showGameOverView(false)
-        //gameOverView.isHidden = true
         newGame()
     }
     
@@ -258,7 +278,7 @@ class ViewController: UIViewController {
             return
         }
         
-        if paused == false, !connectedToNetwork {
+        if paused == true, !connectedToNetwork {
             showNetworkFailure()
             return
         }
@@ -303,18 +323,39 @@ class ViewController: UIViewController {
     
     func showStartGameButton(_ show: Bool) {
         DispatchQueue.main.async {
-            self.startGameButton.isHidden = false
             if show {
-                
-                UIView.animate(withDuration: 1.5, animations: {
-                    self.startGameButton.transform = .identity
-                })
+                self.startGameButton.alpha = 0
+                self.startGameButton.isHidden = false
+                UIView.animate(withDuration: 2.0) {
+                    self.startGameButton.alpha = 1
+                }
             } else {
-                UIView.animate(withDuration: 1.5, animations: {
-                    self.startGameButton.transform = CGAffineTransform(translationX: 0, y: -120)
+                self.startGameButton.alpha = 1
+                UIView.animate(withDuration: 1.0, animations: {
+                    self.startGameButton.alpha = 0
+                }, completion: { (_) in
+                    self.startGameButton.isHidden = true
                 })
             }
-            
+        }
+    }
+    
+    func showCardImageView(_ show: Bool) {
+        DispatchQueue.main.async {
+            if show {
+                self.cardImageView.alpha = 0
+                self.cardImageView.isHidden = false
+                UIView.animate(withDuration: 2.0) {
+                    self.cardImageView.alpha = 1
+                }
+            } else {
+                self.cardImageView.alpha = 1
+                UIView.animate(withDuration: 1.0, animations: {
+                    self.cardImageView.alpha = 0
+                }, completion: { (_) in
+                    self.cardImageView.isHidden = true
+                })
+            }
         }
     }
     
